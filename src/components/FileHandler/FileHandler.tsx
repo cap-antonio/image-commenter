@@ -2,17 +2,8 @@ import React, { ChangeEvent, MouseEvent, useState } from 'react'
 
 import { FileUploader } from '../FileUploader'
 import { Previewer } from '../Previewer'
-import {
-  UploaderWrapper,
-  Wrapper,
-  ImgPreview,
-  UploadedImagesWrapper,
-  ImgPreviewWrapper,
-  ImgTitle,
-  RemoveButton,
-  TagIndicator,
-} from './styles'
-import { truncateFileName } from './utils'
+import { ImgPreview } from './ImgPreview'
+import { UploaderWrapper, Wrapper, UploadedImagesWrapper } from './styles'
 
 import { TFile, TSelectedFile } from './types'
 import { TTag } from '../../hooks'
@@ -20,10 +11,12 @@ import { TTag } from '../../hooks'
 export const FileHandler = (): JSX.Element => {
   const [files, setFiles] = useState<Array<TFile>>([])
   const [inputKey, setInputKey] = useState<string>('')
-  const [selectedFile, setSelectedFile] = useState<TSelectedFile>()
+  const [selectedFile, setSelectedFile] = useState<TSelectedFile | null>(null)
 
-  const handleFilesUpload = (e: ChangeEvent<HTMLInputElement>): void => {
-    const fileList = e.target.files
+  const handleFilesUpload = ({
+    target,
+  }: ChangeEvent<HTMLInputElement>): void => {
+    const fileList = target.files
 
     if (!fileList?.length) return
 
@@ -81,22 +74,19 @@ export const FileHandler = (): JSX.Element => {
         />
       </UploaderWrapper>
       <UploadedImagesWrapper>
-        {files.map(({ id, url, name, tags }) => (
-          <ImgPreviewWrapper
-            key={id}
-            onClick={() => setSelectedFile({ id, url, tags })}
-          >
-            {Boolean(tags.length) && <TagIndicator />}
-            <RemoveButton onClick={(e) => removeFile(e, id)} />
-            <ImgPreview src={url} />
-            <ImgTitle>{truncateFileName(name)}</ImgTitle>
-          </ImgPreviewWrapper>
+        {files.map((file) => (
+          <ImgPreview
+            key={file.id}
+            removeFile={removeFile}
+            setSelectedFile={setSelectedFile}
+            {...file}
+          />
         ))}
       </UploadedImagesWrapper>
       {selectedFile && (
         <Previewer
           url={selectedFile.url}
-          closePreviewer={() => setSelectedFile(undefined)}
+          closePreviewer={() => setSelectedFile(null)}
           savedTags={selectedFile.tags}
           applyTags={applyTags}
         />
