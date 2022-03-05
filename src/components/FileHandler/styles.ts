@@ -84,3 +84,18 @@ export const RemoveButton = styled.div`
     }
   }
 `
+
+export const TagIndicator = styled.div`
+  position: absolute;
+  top: 8px;
+  left: 7px;
+
+  height: 5px;
+  width: 5px;
+
+  ${({ theme }) => `
+    background: ${theme.colors.notice};
+    border-radius: ${theme.borderRadius.round};
+  
+  `}
+`

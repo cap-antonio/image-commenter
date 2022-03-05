@@ -4,6 +4,7 @@ const colors = {
   grey: '#b3b3b3',
   backdrop: `rgba(0, 0, 0, 0.8)`,
   dark: `rgba(0, 0, 0, 0.9)`,
+  notice: '#f05454',
 }
 
 const textColors = {
@@ -24,6 +25,7 @@ const fontSize = {
 
 const borderRadius = {
   s: '10px',
+  xs: '5px',
   round: '50%',
 }
 

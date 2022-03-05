@@ -64,10 +64,10 @@ export const Button = styled.button`
   ${({ theme }) => `
     background: ${theme.colors.basic};
     color: ${theme.textColors.white};
+    border-radius: ${theme.borderRadius.xs};
   `}
   margin: 0 2px;
   padding: 5px;
-  border-radius: 5px;
   cursor: pointer;
 
   &:active {

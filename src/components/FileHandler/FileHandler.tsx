@@ -10,6 +10,7 @@ import {
   ImgPreviewWrapper,
   ImgTitle,
   RemoveButton,
+  TagIndicator,
 } from './styles'
 import { truncateFileName } from './utils'
 
@@ -85,6 +86,7 @@ export const FileHandler = (): JSX.Element => {
             key={id}
             onClick={() => setSelectedFile({ id, url, tags })}
           >
+            {Boolean(tags.length) && <TagIndicator />}
             <RemoveButton onClick={(e) => removeFile(e, id)} />
             <ImgPreview src={url} />
             <ImgTitle>{truncateFileName(name)}</ImgTitle>
