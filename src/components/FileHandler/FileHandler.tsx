@@ -1,7 +1,7 @@
 import React, { ChangeEvent, MouseEvent, useState } from 'react'
 
 import { FileUploader } from '../FileUploader'
-import { Previewer } from '../Previewer'
+import { TagEditor } from '../TagEditor'
 import { ImgPreview } from './ImgPreview'
 import { UploaderWrapper, Wrapper, UploadedImagesWrapper } from './styles'
 
@@ -84,9 +84,9 @@ export const FileHandler = (): JSX.Element => {
         ))}
       </UploadedImagesWrapper>
       {selectedFile && (
-        <Previewer
+        <TagEditor
           url={selectedFile.url}
-          closePreviewer={() => setSelectedFile(null)}
+          closeTagEditor={() => setSelectedFile(null)}
           savedTags={selectedFile.tags}
           applyTags={applyTags}
         />

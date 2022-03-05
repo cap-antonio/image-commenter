@@ -1,8 +1,8 @@
 import { TTag } from '../../hooks'
 
-export type TPreviewer = {
+export type TTagEditor = {
   url: string
-  closePreviewer: () => void
+  closeTagEditor: () => void
   savedTags: Array<TTag>
   applyTags: (tags: Array<TTag>) => void
 }

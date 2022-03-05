@@ -14,14 +14,14 @@ import {
   CloseButton,
 } from './styles'
 
-import { TPreviewer } from './types'
+import { TTagEditor } from './types'
 
-export const Previewer = ({
+export const TagEditor = ({
   url,
-  closePreviewer,
+  closeTagEditor,
   savedTags,
   applyTags,
-}: TPreviewer): JSX.Element => {
+}: TTagEditor): JSX.Element => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const [isBewareModalOpen, setIsBewareModalOpen] = useState<boolean>(false)
 
@@ -29,7 +29,7 @@ export const Previewer = ({
 
   const saveAndClose = (): void => {
     applyTags(tags)
-    closePreviewer()
+    closeTagEditor()
   }
 
   return (
@@ -53,7 +53,7 @@ export const Previewer = ({
           <BewareModal
             isOpen={isBewareModalOpen}
             onYes={saveAndClose}
-            onNo={closePreviewer}
+            onNo={closeTagEditor}
           />
         </ImageWrapper>
         <SaveButton isShow={Boolean(tags.length)} onClick={saveAndClose}>
@@ -61,7 +61,9 @@ export const Previewer = ({
         </SaveButton>
         <CloseButton
           onClick={
-            tags.length ? () => setIsBewareModalOpen(true) : closePreviewer
+            savedTags === tags
+              ? closeTagEditor
+              : () => setIsBewareModalOpen(true)
           }
         />
       </Container>
