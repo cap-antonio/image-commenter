@@ -13,12 +13,13 @@ import {
 } from './styles'
 import { truncateFileName } from './utils'
 
-import { OneFile } from './types'
+import { TFile, TSelectedFile } from './types'
+import { TTag } from '../../hooks'
 
 export const FileHandler = (): JSX.Element => {
-  const [files, setFiles] = useState<Array<OneFile>>([])
+  const [files, setFiles] = useState<Array<TFile>>([])
   const [inputKey, setInputKey] = useState<string>('')
-  const [selectedFile, setSelectedFile] = useState<string>('')
+  const [selectedFile, setSelectedFile] = useState<TSelectedFile>()
 
   const handleFilesUpload = (e: ChangeEvent<HTMLInputElement>): void => {
     const fileList = e.target.files
@@ -32,15 +33,17 @@ export const FileHandler = (): JSX.Element => {
           id: Date.now(),
           name: fileList[0].name,
           url: URL.createObjectURL(fileList[0]),
+          tags: [],
         },
       ])
     } else {
-      const newFileList: Array<OneFile> = []
+      const newFileList: Array<TFile> = []
       Array.from(fileList).forEach((file, i) =>
         newFileList.push({
           id: Date.now() + i,
           name: file.name,
           url: URL.createObjectURL(file),
+          tags: [],
         }),
       )
       setFiles((prev) => [...prev, ...newFileList])
@@ -57,6 +60,17 @@ export const FileHandler = (): JSX.Element => {
     setInputKey('')
   }
 
+  const applyTags = (tags: Array<TTag>): void => {
+    const news = files.map((file) => {
+      if (file.id === selectedFile?.id) {
+        return { ...file, tags }
+      } else {
+        return file
+      }
+    })
+    setFiles(news)
+  }
+
   return (
     <Wrapper>
       <UploaderWrapper>
@@ -66,19 +80,25 @@ export const FileHandler = (): JSX.Element => {
         />
       </UploaderWrapper>
       <UploadedImagesWrapper>
-        {files.map(({ id, url, name }) => (
-          <ImgPreviewWrapper key={id} onClick={() => setSelectedFile(url)}>
+        {files.map(({ id, url, name, tags }) => (
+          <ImgPreviewWrapper
+            key={id}
+            onClick={() => setSelectedFile({ id, url, tags })}
+          >
             <RemoveButton onClick={(e) => removeFile(e, id)} />
             <ImgPreview src={url} />
             <ImgTitle>{truncateFileName(name)}</ImgTitle>
           </ImgPreviewWrapper>
         ))}
       </UploadedImagesWrapper>
-      <Previewer
-        isOpen={Boolean(selectedFile)}
-        url={selectedFile}
-        onClose={() => setSelectedFile('')}
-      />
+      {selectedFile && (
+        <Previewer
+          url={selectedFile.url}
+          closePreviewer={() => setSelectedFile(undefined)}
+          savedTags={selectedFile.tags}
+          applyTags={applyTags}
+        />
+      )}
     </Wrapper>
   )
 }

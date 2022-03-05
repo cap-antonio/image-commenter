@@ -1,5 +1,7 @@
-import React, { useEffect, useRef, useState, WheelEvent } from 'react'
+import React, { useRef, useState } from 'react'
 
+import { useTags } from '../../hooks'
+import { BewareModal } from '../BewareModal'
 import {
   BackDrop,
   ImgViewer,
@@ -7,104 +9,62 @@ import {
   Tag,
   RemoveTagButton,
   TagWrapper,
+  Container,
+  SaveButton,
+  CloseButton,
 } from './styles'
-import { useTags } from './useTags'
 
-import { TPosition, TPreviewer } from './types'
-
-const defaultPosition: TPosition = {
-  x: 0,
-  y: 0,
-  z: 1,
-}
+import { TPreviewer } from './types'
 
 export const Previewer = ({
-  isOpen,
   url,
-  onClose,
+  closePreviewer,
+  savedTags,
+  applyTags,
 }: TPreviewer): JSX.Element => {
-  const ref = useRef<HTMLImageElement>(null)
-  const [position, setPosition] = useState<TPosition>(defaultPosition)
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const [isBewareModalOpen, setIsBewareModalOpen] = useState<boolean>(false)
 
-  const { tags, handleAddTag, removeTag, clearTags, editTag } = useTags()
+  const { tags, addTag, removeTag, editTag } = useTags(savedTags)
 
-  useEffect(() => {
-    document.addEventListener('keydown', onKeyDown, false)
-    return () => {
-      document.removeEventListener('keydown', onKeyDown, false)
-      setPosition(defaultPosition)
-      clearTags()
-    }
-  }, [isOpen])
-
-  const onKeyDown = (event: KeyboardEvent): void => {
-    const keyCode = event.key
-    const isEscape = keyCode === 'Escape' || keyCode === 'Esc'
-    if (isEscape && isOpen) onClose()
-  }
-
-  const onWheel = (
-    e: WheelEvent<HTMLImageElement>,
-    imageUrl: string,
-    currentPosition: TPosition,
-  ): void => {
-    const image = new Image()
-    image.src = imageUrl
-    if (e.deltaY) {
-      const sign = Math.sign(e.deltaY) / 10
-      const scale = 1 - sign
-      const {
-        width = 0,
-        x = 0,
-        y = 0,
-      } = ref.current?.getBoundingClientRect() || {}
-
-      let newPos = {
-        x: currentPosition.x * scale - (width / 2 - e.clientX + x) * sign,
-        y:
-          currentPosition.y * scale -
-          ((image.height * width) / image.width / 2 - e.clientY + y) * sign,
-        z: currentPosition.z * scale,
-      }
-
-      if (currentPosition.z * scale < 1)
-        newPos = {
-          x: 0,
-          y: 0,
-          z: 1,
-        }
-
-      if (currentPosition.z * scale >= 2) newPos = currentPosition
-
-      setPosition(newPos)
-    }
+  const saveAndClose = (): void => {
+    applyTags(tags)
+    closePreviewer()
   }
 
   return (
-    <BackDrop isOpen={isOpen} onClick={onClose}>
-      <ImageWrapper>
-        <ImgViewer
-          id="test"
-          ref={ref}
-          src={url}
-          onClick={(e) => handleAddTag(e, url, ref)}
-          onWheelCapture={(e) => onWheel(e, url, position)}
-          style={{
-            transform: `translate(${position.x}px, ${position.y}px) scale(${position.z})`,
-          }}
+    <BackDrop>
+      <Container>
+        <ImageWrapper ref={wrapperRef}>
+          <ImgViewer src={url} onClick={(e) => addTag(e, wrapperRef)} />
+          {tags.map(({ x, y, text, id }) => (
+            <TagWrapper key={id} style={{ left: `${x}%`, top: `${y}%` }}>
+              <Tag
+                rows={text.length ? Math.ceil(text.length / 20) : 1}
+                onChange={({ currentTarget }) =>
+                  editTag(currentTarget.value, id)
+                }
+                value={text}
+                autoFocus
+              ></Tag>
+              <RemoveTagButton onClick={() => removeTag(id)} />
+            </TagWrapper>
+          ))}
+          <BewareModal
+            isOpen={isBewareModalOpen}
+            onYes={saveAndClose}
+            onNo={closePreviewer}
+          />
+        </ImageWrapper>
+        <SaveButton isShow={Boolean(tags.length)} onClick={saveAndClose}>
+          Save and close
+        </SaveButton>
+        <CloseButton
+          onClick={
+            tags.length ? () => setIsBewareModalOpen(true) : closePreviewer
+          }
         />
-        {tags.map(({ x, y, text, id }) => (
-          <TagWrapper key={id} style={{ left: x, top: y }}>
-            <Tag
-              autoFocus
-              onClick={(e) => e.stopPropagation()}
-              onChange={(e) => editTag(e, id)}
-              value={text}
-            ></Tag>
-            <RemoveTagButton onClick={(e) => removeTag(e, id)} />
-          </TagWrapper>
-        ))}
-      </ImageWrapper>
+      </Container>
     </BackDrop>
   )
 }

@@ -2,6 +2,8 @@ const colors = {
   basic: '#054381',
   accent: '#76ade4',
   grey: '#b3b3b3',
+  backdrop: `rgba(0, 0, 0, 0.8)`,
+  dark: `rgba(0, 0, 0, 0.9)`,
 }
 
 const textColors = {

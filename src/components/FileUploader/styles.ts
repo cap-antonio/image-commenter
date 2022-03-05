@@ -5,6 +5,7 @@ export const StyledLabel = styled.label`
   justify-content: center;
   align-items: center;
 
+  user-select: none;
   padding: 10px;
   height: 40px;
   ${({ theme }) => `
