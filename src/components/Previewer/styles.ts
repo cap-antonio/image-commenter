@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
-import { TContainer } from './types'
+
+import type { TContainer } from './types'
 
 export const BackDrop = styled.div<TContainer>`
   display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
@@ -22,4 +23,38 @@ export const ImgViewer = styled.img`
   max-height: 90vh;
   max-width: 90vw;
   z-index: 2;
+`
+
+export const RemoveTagButton = styled.div`
+  display: none;
+  align-items: center;
+
+  cursor: pointer;
+  height: 100%;
+  margin-left: 5px;
+
+  &:after {
+    display: flex;
+    justify-content: center;
+
+    content: '⨯';
+    color: ${({ theme }) => theme.textColors.notice};
+  }
+`
+
+export const Tag = styled.div`
+  position: absolute;
+  display: flex;
+  cursor: text;
+  ${({ theme }) => `
+    background: ${theme.colors.grey};
+    color: ${theme.textColors.notice};
+  `}
+  padding: 2px 5px;
+
+  &:hover {
+    ${RemoveTagButton} {
+      display: flex;
+    }
+  }
 `

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, MouseEvent, useState } from 'react'
 
 import { FileUploader } from '../FileUploader'
 import { Previewer } from '../Previewer'
@@ -22,7 +22,9 @@ export const FileHandler = (): JSX.Element => {
 
   const handleFilesUpload = (e: ChangeEvent<HTMLInputElement>): void => {
     const fileList = e.target.files
+
     if (!fileList?.length) return
+
     if (fileList.length < 2) {
       setFiles((prev) => [
         ...prev,
@@ -34,9 +36,9 @@ export const FileHandler = (): JSX.Element => {
       ])
     } else {
       const newFileList: Array<OneFile> = []
-      Array.from(fileList).forEach((file, index) =>
+      Array.from(fileList).forEach((file, i) =>
         newFileList.push({
-          id: Date.now() + index,
+          id: Date.now() + i,
           name: file.name,
           url: URL.createObjectURL(file),
         }),
@@ -46,7 +48,11 @@ export const FileHandler = (): JSX.Element => {
     setInputKey(fileList[0].name)
   }
 
-  const removeFile = (selectedId: number): void => {
+  const removeFile = (
+    e: MouseEvent<HTMLDivElement>,
+    selectedId: number,
+  ): void => {
+    e.stopPropagation()
     setFiles((prev) => prev.filter(({ id }) => id !== selectedId))
     setInputKey('')
   }
@@ -62,7 +68,7 @@ export const FileHandler = (): JSX.Element => {
       <UploadedImagesWrapper>
         {files.map(({ id, url, name }) => (
           <ImgPreviewWrapper key={id} onClick={() => setSelectedFile(url)}>
-            <RemoveButton onClick={() => removeFile(id)} />
+            <RemoveButton onClick={(e) => removeFile(e, id)} />
             <ImgPreview src={url} />
             <ImgTitle>{truncateFileName(name)}</ImgTitle>
           </ImgPreviewWrapper>

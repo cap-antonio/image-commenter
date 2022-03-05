@@ -1,12 +1,13 @@
-import React, {
-  MouseEvent,
-  useEffect,
-  useRef,
-  useState,
-  WheelEvent,
-} from 'react'
+import React, { useEffect, useRef, useState, WheelEvent } from 'react'
 
-import { BackDrop, ImgViewer, ImageWrapper } from './styles'
+import {
+  BackDrop,
+  ImgViewer,
+  ImageWrapper,
+  Tag,
+  RemoveTagButton,
+} from './styles'
+import { useTags } from './useTags'
 
 import { TPosition, TPreviewer } from './types'
 
@@ -23,27 +24,17 @@ export const Previewer = ({
 }: TPreviewer): JSX.Element => {
   const ref = useRef<HTMLImageElement>(null)
   const [position, setPosition] = useState<TPosition>(defaultPosition)
-  const [tags, setTags] = useState<any>([])
+
+  const { tags, handleAddTag, removeTag, clearTags } = useTags()
 
   useEffect(() => {
     document.addEventListener('keydown', onKeyDown, false)
     return () => {
       document.removeEventListener('keydown', onKeyDown, false)
       setPosition(defaultPosition)
+      clearTags()
     }
   }, [isOpen])
-
-  const handleOnImageClick = (e: MouseEvent<HTMLImageElement>): void => {
-    e.stopPropagation()
-    console.log(e)
-    setTags((tags) => [
-      ...tags,
-      {
-        x: e.clientX - 100,
-        y: e.clientY,
-      },
-    ])
-  }
 
   const onKeyDown = (event: KeyboardEvent): void => {
     const keyCode = event.key
@@ -54,7 +45,7 @@ export const Previewer = ({
   const onWheel = (
     e: WheelEvent<HTMLImageElement>,
     imageUrl: string,
-    currentPosition: any,
+    currentPosition: TPosition,
   ): void => {
     const image = new Image()
     image.src = imageUrl
@@ -95,14 +86,17 @@ export const Previewer = ({
           id="test"
           ref={ref}
           src={url}
-          onClick={handleOnImageClick}
+          onClick={(e) => handleAddTag(e, url, ref)}
           onWheelCapture={(e) => onWheel(e, url, position)}
           style={{
             transform: `translate(${position.x}px, ${position.y}px) scale(${position.z})`,
           }}
         />
-        {tags.map(({ x, y }) => (
-          <div style={{ position: 'absolute', left: x, top: y }}>sdfdsfds</div>
+        {tags.map(({ x, y, text, id }) => (
+          <Tag key={id} style={{ left: x, top: y }}>
+            {text}
+            <RemoveTagButton onClick={(e) => removeTag(e, id)} />
+          </Tag>
         ))}
       </ImageWrapper>
     </BackDrop>

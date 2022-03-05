@@ -16,7 +16,7 @@ export const FileUploader = ({
         onChange={handleFilesUpload}
         accept="image/jpeg"
       />
-      Choose image
+      Choose image(s)
     </StyledLabel>
   )
 }

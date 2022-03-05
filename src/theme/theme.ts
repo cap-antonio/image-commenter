@@ -1,11 +1,13 @@
 const colors = {
   basic: '#054381',
   accent: '#76ade4',
+  grey: '#b3b3b3',
 }
 
 const textColors = {
   basic: '#212121',
   white: '#FFFFFF',
+  notice: '#f05454',
 }
 
 const fontSize = {
