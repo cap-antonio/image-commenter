@@ -17,12 +17,18 @@ export const BackDrop = styled.div<TContainer>`
 
 export const ImageWrapper = styled.div`
   position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+  width: 100%;
 `
 
 export const ImgViewer = styled.img`
   max-height: 90vh;
   max-width: 90vw;
-  z-index: 2;
 `
 
 export const RemoveTagButton = styled.div`
@@ -30,31 +36,39 @@ export const RemoveTagButton = styled.div`
   align-items: center;
 
   cursor: pointer;
-  height: 100%;
-  margin-left: 5px;
+  background: ${({ theme }) => theme.textColors.notice};
 
   &:after {
     display: flex;
     justify-content: center;
 
+    line-height: 10px;
     content: '⨯';
-    color: ${({ theme }) => theme.textColors.notice};
+    color: ${({ theme }) => theme.textColors.white};
   }
 `
 
-export const Tag = styled.div`
-  position: absolute;
+export const TagWrapper = styled.div`
   display: flex;
-  cursor: text;
-  ${({ theme }) => `
-    background: ${theme.colors.grey};
-    color: ${theme.textColors.notice};
-  `}
-  padding: 2px 5px;
+
+  position: absolute;
 
   &:hover {
     ${RemoveTagButton} {
       display: flex;
     }
   }
+`
+
+export const Tag = styled.input`
+  display: flex;
+
+  height: 100%;
+  outline: none;
+  border: none;
+  cursor: text;
+  ${({ theme }) => `
+    background: ${theme.colors.grey};
+    color: ${theme.textColors.notice};
+  `}
 `

@@ -1,4 +1,4 @@
-import { MouseEvent, RefObject } from 'react'
+import { ChangeEvent, MouseEvent, RefObject } from 'react'
 
 export type TPreviewer = {
   isOpen: boolean
@@ -26,4 +26,5 @@ export type TUseTagsOutPut = {
   ) => void
   removeTag: (e: MouseEvent<HTMLDivElement>, id: number) => void
   clearTags: () => void
+  editTag: (e: ChangeEvent<HTMLInputElement>, selecetdId: number) => void
 }

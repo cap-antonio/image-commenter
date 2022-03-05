@@ -6,6 +6,7 @@ import {
   ImageWrapper,
   Tag,
   RemoveTagButton,
+  TagWrapper,
 } from './styles'
 import { useTags } from './useTags'
 
@@ -25,7 +26,7 @@ export const Previewer = ({
   const ref = useRef<HTMLImageElement>(null)
   const [position, setPosition] = useState<TPosition>(defaultPosition)
 
-  const { tags, handleAddTag, removeTag, clearTags } = useTags()
+  const { tags, handleAddTag, removeTag, clearTags, editTag } = useTags()
 
   useEffect(() => {
     document.addEventListener('keydown', onKeyDown, false)
@@ -93,10 +94,15 @@ export const Previewer = ({
           }}
         />
         {tags.map(({ x, y, text, id }) => (
-          <Tag key={id} style={{ left: x, top: y }}>
-            {text}
+          <TagWrapper key={id} style={{ left: x, top: y }}>
+            <Tag
+              autoFocus
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e) => editTag(e, id)}
+              value={text}
+            ></Tag>
             <RemoveTagButton onClick={(e) => removeTag(e, id)} />
-          </Tag>
+          </TagWrapper>
         ))}
       </ImageWrapper>
     </BackDrop>
