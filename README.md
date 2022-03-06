@@ -5,5 +5,5 @@
 
 ## Установка и запуск
 
-yarn & yarn start
-yarn prepare - для иниицализации husky pre-commit
+- yarn & yarn start
+- yarn prepare - для инициализации husky pre-commit
