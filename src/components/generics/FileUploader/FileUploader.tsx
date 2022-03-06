@@ -6,6 +6,7 @@ import { TFileUploader } from './types'
 export const FileUploader = ({
   handleFilesUpload,
   inputKey,
+  title = 'Choose image(s)',
 }: TFileUploader): JSX.Element => (
   <StyledLabel>
     <StyledUploader
@@ -15,6 +16,6 @@ export const FileUploader = ({
       onChange={handleFilesUpload}
       accept="image/jpeg"
     />
-    Choose image(s)
+    {title}
   </StyledLabel>
 )

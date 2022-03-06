@@ -1,6 +1,6 @@
 import React, { ChangeEvent, MouseEvent, useState } from 'react'
 
-import { FileUploader } from '../FileUploader'
+import { FileUploader } from '../generics'
 import { TagEditor } from '../TagEditor'
 import { ImgPreview } from './ImgPreview'
 import { UploaderWrapper, Wrapper, UploadedImagesWrapper } from './styles'

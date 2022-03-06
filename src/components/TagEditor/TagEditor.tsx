@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 
 import { useTags } from '../../hooks'
-import { BewareModal } from '../BewareModal'
+import { BewareModal } from '../generics'
 import {
   BackDrop,
   ImgViewer,
@@ -32,6 +32,8 @@ export const TagEditor = ({
     closeTagEditor()
   }
 
+  const openModal = () => setIsBewareModalOpen(true)
+
   return (
     <BackDrop>
       <Container>
@@ -46,25 +48,21 @@ export const TagEditor = ({
                 }
                 value={text}
                 autoFocus
-              ></Tag>
+              />
               <RemoveTagButton onClick={() => removeTag(id)} />
             </TagWrapper>
           ))}
           <BewareModal
             isOpen={isBewareModalOpen}
-            onYes={saveAndClose}
-            onNo={closeTagEditor}
+            onConfirm={saveAndClose}
+            onCancel={closeTagEditor}
           />
         </ImageWrapper>
         <SaveButton isShow={Boolean(tags.length)} onClick={saveAndClose}>
           Save and close
         </SaveButton>
         <CloseButton
-          onClick={
-            savedTags === tags
-              ? closeTagEditor
-              : () => setIsBewareModalOpen(true)
-          }
+          onClick={savedTags === tags ? closeTagEditor : openModal}
         />
       </Container>
     </BackDrop>
