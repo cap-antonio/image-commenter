@@ -58,7 +58,7 @@ export const TagEditor = ({
             onCancel={closeTagEditor}
           />
         </ImageWrapper>
-        <SaveButton isShow={Boolean(tags.length)} onClick={saveAndClose}>
+        <SaveButton isShow={savedTags !== tags} onClick={saveAndClose}>
           Save and close
         </SaveButton>
         <CloseButton

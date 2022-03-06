@@ -15,7 +15,7 @@ export const BewareModal = ({
   isOpen,
   onCancel,
   onConfirm,
-  modalText = 'Save tags?',
+  modalText = 'Save changes?',
   confirmButtonText = 'Yes',
   cancelButtonText = 'No',
 }: TBewareModal): JSX.Element => (
