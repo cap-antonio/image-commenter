@@ -65,6 +65,8 @@ export const FileHandler = (): JSX.Element => {
     setFiles(news)
   }
 
+  const removeSelectedFile = (): void => setSelectedFile(null)
+
   return (
     <Wrapper>
       <UploaderWrapper>
@@ -86,7 +88,7 @@ export const FileHandler = (): JSX.Element => {
       {selectedFile && (
         <TagEditor
           url={selectedFile.url}
-          closeTagEditor={() => setSelectedFile(null)}
+          closeTagEditor={removeSelectedFile}
           savedTags={selectedFile.tags}
           applyTags={applyTags}
         />
